@@ -46,6 +46,7 @@ namespace TicTacToe
 
                 // Secilen butonun adini oyuncunun secilen butonlarin listesine ekler.
                 redPlayer.SelectedButtons.Add(button.Name);
+                CheckPlayerIsWin(redPlayer);
 
                 return;
             }
@@ -160,6 +161,27 @@ namespace TicTacToe
                 BlueScoreLabel.Text = "Score:";
                 RedScoreLabel.Text = "Score:";
             }
+        }
+
+        void CheckPlayerIsWin(Player player)
+        {
+            // Yatay Butonlar
+            List<string> pattern1 = new List<string>() { "btn1", "btn2", "btn3" };
+            List<string> pattern2 = new List<string>() { "btn4", "btn5", "btn6" };
+            List<string> pattern3 = new List<string>() { "btn7", "btn8", "btn9" };
+
+            // Dikey Butonlar
+            List<string> pattern4 = new List<string>() { "btn1", "btn4", "btn7" };
+            List<string> pattern5 = new List<string>() { "btn2", "btn5", "btn8" };
+            List<string> pattern6 = new List<string>() { "btn3", "btn6", "btn9" };
+
+            // Capraz Buttonlar
+            List<string> pattern7 = new List<string>() { "btn1", "btn5", "btn9" };
+            List<string> pattern8 = new List<string>() { "btn3", "btn5", "btn7" };
+
+
+            bool pattern1Result = player.SelectedButtons.Any((x) => pattern1.Any((y) => x == y));
+            MessageBox.Show(pattern1Result.ToString());
         }
 
         /*
