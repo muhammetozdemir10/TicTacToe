@@ -64,6 +64,7 @@ namespace TicTacToe
 
                 // Secilen butonun adini oyuncunun secilen butonlarin listesine ekler.
                 bluePlayer.SelectedButtons.Add(button.Name);
+                CheckPlayerIsWin(bluePlayer);
                 return;
             }
         }
@@ -126,7 +127,7 @@ namespace TicTacToe
                 btn1.BackColor = SystemColors.Control;
 
                 btn2.Enabled = false;
-                btn2.BackColor = SystemColors.Control; 
+                btn2.BackColor = SystemColors.Control;
 
                 btn3.Enabled = false;
                 btn3.BackColor = SystemColors.Control;
@@ -164,29 +165,112 @@ namespace TicTacToe
         }
 
         void CheckPlayerIsWin(Player player)
-        {
-            // Yatay Butonlar
-            List<string> pattern1 = new List<string>() { "btn1", "btn2", "btn3" };
-            List<string> pattern2 = new List<string>() { "btn4", "btn5", "btn6" };
-            List<string> pattern3 = new List<string>() { "btn7", "btn8", "btn9" };
+        { 
+            List<List<string>> patterns = new List<List<string>>()
+            {
+                // Yatay Butonlar
+                new List<string>() { "btn1", "btn2", "btn3" },
+                new List<string>() { "btn4", "btn5", "btn6" },
+                new List<string>() { "btn7", "btn8", "btn9" },
 
-            // Dikey Butonlar
-            List<string> pattern4 = new List<string>() { "btn1", "btn4", "btn7" };
-            List<string> pattern5 = new List<string>() { "btn2", "btn5", "btn8" };
-            List<string> pattern6 = new List<string>() { "btn3", "btn6", "btn9" };
+                // Dikey Butonlar
+                new List<string>() { "btn1", "btn4", "btn7" },
+                new List<string>() { "btn2", "btn5", "btn8" },
+                new List<string>() { "btn3", "btn6", "btn9" },
 
-            // Capraz Buttonlar
-            List<string> pattern7 = new List<string>() { "btn1", "btn5", "btn9" };
-            List<string> pattern8 = new List<string>() { "btn3", "btn5", "btn7" };
+                // Capraz Buttonlar
+                new List<string>() { "btn1", "btn5", "btn9" },
+                new List<string>() { "btn3", "btn5", "btn7" },
+            };
 
+            foreach (List<string> pattern in patterns)
+            {
+                int findedButtons = 0;
+                foreach (string buttonName in pattern)
+                {
+                    int buttonIndex = player.SelectedButtons.FindIndex((x) => x == buttonName);
+                    if (buttonIndex > -1)
+                    {
+                        findedButtons++;
+                    }
+                }
 
-            bool pattern1Result = player.SelectedButtons.Any((x) => pattern1.Any((y) => x == y));
-            MessageBox.Show(pattern1Result.ToString());
+                if (findedButtons == 3)
+                {
+                    switch (player.Id)
+                    {
+                        // Kirmizi oyuncu
+                        case 1:
+                            MessageBox.Show("RED Kazandi");
+                            player.Score++;
+                            RedScoreLabel.Text = $"Score: {player.Score}";
+                            break;
+
+                        // Mavi oyuncu
+                        case 2:
+                            MessageBox.Show("BLUE Kazandi");
+                            player.Score++;
+                            BlueScoreLabel.Text = $"Score: {player.Score}";
+                           
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    NewRound();
+                    return;
+                }
+            }
+
+            if (redPlayer.SelectedButtons.Count + bluePlayer.SelectedButtons.Count == 9)
+            {
+                MessageBox.Show("Berabere kaldiniz");
+                NewRound();
+            }
         }
 
-        /*
-         * TODO: Kazanma hamleleri algoritmasi yazilacak ve kazanan oyuncuya skora puan yazilacak.
-         * TODO: Oyun bittiginde oyunu sifirdan baslasin yada yeni bir tur secenegi yapilacak.
-         */
+        void NewRound()
+        {
+            currentPlayerId = 0;
+
+            btn1.Enabled = false;
+            btn1.BackColor = SystemColors.Control;
+
+            btn2.Enabled = false;
+            btn2.BackColor = SystemColors.Control;
+
+            btn3.Enabled = false;
+            btn3.BackColor = SystemColors.Control;
+
+            btn4.Enabled = false;
+            btn4.BackColor = SystemColors.Control;
+
+            btn5.Enabled = false;
+            btn5.BackColor = SystemColors.Control;
+
+            btn6.Enabled = false;
+            btn6.BackColor = SystemColors.Control;
+
+            btn7.Enabled = false;
+            btn7.BackColor = SystemColors.Control;
+
+            btn8.Enabled = false;
+            btn8.BackColor = SystemColors.Control;
+
+            btn9.Enabled = false;
+            btn9.BackColor = SystemColors.Control;
+
+            CurrentPlayerLabel.Text = "Current:";
+            CurrentPlayerLabel.ForeColor = Color.Black;
+
+            RedPlayerRadioButton.Checked = false;
+            BluePlayerRadioButton.Checked = false;
+
+            StartGameButton.Visible = true;
+
+            redPlayer.SelectedButtons.Clear();
+            bluePlayer.SelectedButtons.Clear();
+        }
     }
 }
