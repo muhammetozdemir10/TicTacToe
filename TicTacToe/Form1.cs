@@ -13,15 +13,34 @@ namespace TicTacToe
 {
     public partial class Form1 : Form
     {
+        /*
+         * Tic Tac Toe Oyunu
+         * Hakkinda: Bu projede tic tac toe oyunu iki oyuncu 
+         * Red ve Blue oyuncular olmak uzere iki kisilik bir oyundur. 
+         */
+
+
+        // Kirmizi oyuncunun degiskeni
         Player redPlayer;
+
+        // Mavi oyuncunun degiskeni
         Player bluePlayer;
+
+        // Sirasi olan oyuncunun Id'si
         int currentPlayerId = 0;
 
         public Form1()
         {
+            // Bu fonksiyon Windows Form bilesenleri calismaya hazirlar.
             InitializeComponent();
         }
 
+
+        /// <summary>
+        /// Bu fonksiyonda oyunun icerisindeki 9 Button'unlarin Click eyleminde cagrilmaktadir.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_Click(object sender, EventArgs e)
         {
             // sender'i Button olarak unbox ettik
@@ -30,13 +49,14 @@ namespace TicTacToe
             // Secilen bir butonun yerini farkli bir oyuncunun secmesini engeller.
             if (redPlayer.SelectedButtons.Contains(button.Name) || bluePlayer.SelectedButtons.Contains(button.Name))
             {
+                // Fonksiyondan cikis yapilir.
                 return;
             }
 
             // Su an ki oyuncu kirmizi oyuncu olup olmadigini kontrol eder.
             if (currentPlayerId == redPlayer.Id)
             {
-                // Secilen butonun arka olan rengi kirmizi yapar.
+                // Secilen butonun arka plan rengi kirmizi yapar.
                 button.BackColor = Color.Red;
 
                 // Su an ki oyuncunun hamlesi diger oyuncuya atanir. 
@@ -46,8 +66,11 @@ namespace TicTacToe
 
                 // Secilen butonun adini oyuncunun secilen butonlarin listesine ekler.
                 redPlayer.SelectedButtons.Add(button.Name);
+
+                // CheckPlayerIsWin Fonksiyonu Kazanan oyuncuyu kontrol eder
                 CheckPlayerIsWin(redPlayer);
 
+                // Fonksiyondan cikis yapilir.
                 return;
             }
 
@@ -69,27 +92,54 @@ namespace TicTacToe
             }
         }
 
+        /// <summary>
+        /// Start Game botununa tiklandiginda cagrilan fonksiyon
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartGameButton_Click(object sender, EventArgs e)
         {
+            // Kirmizi oyuncunun degiskenine yeni bir Player nesnesi atanir.
             redPlayer = new Player(1);
+
+            // Mavi oyuncunun degiskenine yeni bir Player nesnesi atanir.
             bluePlayer = new Player(2);
 
+            /* 
+             * Kirmizi oyuncunun RadioButton'u veya
+             * mavi oyuncunun RadioButton'u secili olup olmadigini kontrol eder
+            */
             if (RedPlayerRadioButton.Checked == true || BluePlayerRadioButton.Checked == true)
             {
+
+                // Kirmizi oyuncunun RadioButton secili oldugunu kontrol eder
                 if (RedPlayerRadioButton.Checked == true)
                 {
+                    // Suanki oyuncuun sirasi gosteren Label'in yazisi degistirilir.
                     CurrentPlayerLabel.Text = "Current: RED";
+
+                    // Suanki oyuncuun sirasi gosteren Label'in rengi degistirilir.
                     CurrentPlayerLabel.ForeColor = Color.Red;
+
+                    // Suanki oyuncuun Id'si currentPlayerId degiskenine atanir.
                     currentPlayerId = redPlayer.Id;
                 }
 
+                // Mavi oyuncunun RadioButton secili oldugunu kontrol eder
                 if (BluePlayerRadioButton.Checked == true)
                 {
+                    // Suanki oyuncuun sirasi gosteren Label'in yazisi degistirilir.
                     CurrentPlayerLabel.Text = "Current: BLUE";
+
+                    // Suanki oyuncuun sirasi gosteren Label'in rengi degistirilir.
                     CurrentPlayerLabel.ForeColor = Color.Blue;
+
+                    // Suanki oyuncuun Id'si currentPlayerId degiskenine atanir.
                     currentPlayerId = bluePlayer.Id;
                 }
 
+
+                // Oyunun Button'lari aktif edilir (Oyunun alanin buttonlari sadece)
                 btn1.Enabled = true;
                 btn2.Enabled = true;
                 btn3.Enabled = true;
@@ -100,30 +150,45 @@ namespace TicTacToe
                 btn8.Enabled = true;
                 btn9.Enabled = true;
 
+                // StartGameButton'u gizler
                 StartGameButton.Visible = false;
             }
             else
             {
+                // Herhangi bir secim yapilmazsa uyari mesaji verilir.
                 MessageBox.Show("Kirmizi veya Mavi oyunculardan biri secilmelidir");
             }
         }
 
+
+        // ResetButton'un Click eyleminde cagrilan fonksiyon
         private void ResetButton_Click(object sender, EventArgs e)
         {
+            // Burada secenekli bir MessageBox olusturulur. Sonucu result degiskenine atanir.
             DialogResult result = MessageBox.Show(
                 "Oyunu resetlemek istediginizden eminmisiniz?",
                 "UYARI",
                 MessageBoxButtons.OKCancel
                 );
 
+            // Kullanici OK butona tikladigini kontrol eder
             if (result == DialogResult.OK)
             {
+                // Kirmizi oyuncunun degiskenine null degeri atanir.
                 redPlayer = null;
+
+                // Mavi oyuncunun degiskenine null degeri atanir.
                 bluePlayer = null;
 
+                // Suanki sirasi olan oyuncunun Id'si sifir olarak atanir.
                 currentPlayerId = 0;
 
+                #region Oyunun butonlari sifirlar
+
+                // Butonun deaktif eder.
                 btn1.Enabled = false;
+
+                // Butonun rengi degistirir.
                 btn1.BackColor = SystemColors.Control;
 
                 btn2.Enabled = false;
@@ -150,20 +215,35 @@ namespace TicTacToe
                 btn9.Enabled = false;
                 btn9.BackColor = SystemColors.Control;
 
+                #endregion
 
+                // Suanki oyuncunun sirasi gosteren Label yazisi degistirilir.
                 CurrentPlayerLabel.Text = "Current:";
+
+                // Suanki oyuncunun sirasi gosteren Label yazi rengi siyah olarak tanimlanir.
                 CurrentPlayerLabel.ForeColor = Color.Black;
 
+                // Kirmizi oyuncunun RadioButton tusu secimini kaldirir.
                 RedPlayerRadioButton.Checked = false;
+
+                // Mavi oyuncunun RadioButton tusu secimini kaldirir.
                 BluePlayerRadioButton.Checked = false;
 
+                // StartGameButton'u gizlenmesi kaldirir.
                 StartGameButton.Visible = true;
 
+                // Mavi oyuncunun skor Label'in yazisi degistirir.
                 BlueScoreLabel.Text = "Score:";
+
+                // Kirmizi oyuncunun skor Label'in yazisi degistirir.
                 RedScoreLabel.Text = "Score:";
             }
         }
 
+        /// <summary>
+        /// Kazanan oyuncuyu kontrol eder
+        /// </summary>
+        /// <param name="player">Kontrol edilecek oyuncunun nesnesi</param>
         void CheckPlayerIsWin(Player player)
         { 
             List<List<string>> patterns = new List<List<string>>()
@@ -228,6 +308,7 @@ namespace TicTacToe
                 MessageBox.Show("Berabere kaldiniz");
                 NewRound();
             }
+            // ------------------------------------------
         }
 
         void NewRound()
